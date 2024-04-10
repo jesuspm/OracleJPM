@@ -85,15 +85,16 @@ SQL>
 -------------------------
     --REQUERIMENT 4.
 -------------------------
-CREATE OR REPLACE FUNCTION esPesValid1(num INTEGER, formato VARCHAR2)
+CREATE OR REPLACE FUNCTION esPesValid1(cadena varchar2)
 RETURN INTEGER
 IS
     resultado INTEGER;
+    pies varchar2:=1;
+    pulgadas varchar2:=1;
 BEGIN
-    -- Concatenar el número y el formato en una cadena
-    resultado := TO_NUMBER(TO_CHAR(num) || formato);
+    while)
     
-    -- Devolver el resultado
+    
     RETURN resultado;
 END;
 /
