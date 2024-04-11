@@ -92,7 +92,7 @@ IS
     pies varchar2:=1;
     pulgadas varchar2:=1;
 BEGIN
-    while)
+    while(pies>=)
     
     
     RETURN resultado;
