@@ -206,3 +206,77 @@ susej
         return aux;
     END;
     /
+
+
+---------------------------------------------------------------------------------------
+                                    -SEGUNDA PARTE-
+---------------------------------------------------------------------------------------
+
+
+-- 14. Crea un procediment que permeti consultar les dades d’un pokemon en format
+-- fitxa a partir de un codi empleat passat com a paràmetre (ampliació de l’exercici
+-- de mostra fet a classe)
+
+CREATE OR REPLACE FUNCTION existe_pokemon(x INTEGER) RETURN INTEGER IS
+    aux INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO aux FROM pokemon WHERE numero_pokedex=x;
+    RETURN aux;
+END;
+/
+                       
+CREATE OR REPLACE PROCEDURE problema14(codi INTEGER) IS
+    v_numero    pokemon.numero_pokedex%TYPE;
+    v_nom       pokemon.nombre%TYPE;
+    v_pes       pokemon.peso%TYPE;
+    v_alcada    pokemon.altura%TYPE;
+    valida      INTEGER;
+BEGIN
+    /* pasos a fer:
+        1. validar que existeix el pokemon
+        2. Obtenir les dades
+        3. Mostrar-les per pantalla
+    */
+    valida:=existe_pokemon(codi);
+    IF (valida=1) THEN
+        SELECT * 
+        INTO v_numero, v_nom, v_pes, v_alcada
+        FROM                            pokemon WHERE numero_pokedex=codi;
+ 
+        mostra(v_numero, v_nom, v_pes, v_alcada);
+    ELSE
+        DBMS_OUTPUT.put_line('No existeix cap pokemon amb codi: '|| codi);
+    END IF;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE mostra( v_numero    pokemon.numero_pokedex%TYPE,
+                                    v_nom       pokemon.nombre%TYPE,
+                                    v_pes       pokemon.peso%TYPE,
+                                    v_alcada    pokemon.altura%TYPE 
+                                )IS
+BEGIN
+    DBMS_OUTPUT.put_line('--------------------------------');
+    DBMS_OUTPUT.put_line('       POKEDEX LIBRARY ');
+    DBMS_OUTPUT.put_line('--------------------------------');
+    DBMS_OUTPUT.put_line('Número: '|| CHR(9) || v_numero);
+    DBMS_OUTPUT.put_line('Nom: '|| CHR(9) || CHR(9) || v_nom);
+    DBMS_OUTPUT.put_line('Pes: '|| CHR(9) || CHR(9) || v_pes);
+    DBMS_OUTPUT.put_line('Alçada: '|| CHR(9) || v_alcada);
+END;
+/
+-- 15. Amplia el procediment anterior per tal que a més de les dades pròpies del
+-- pokemon mostri també les dades de les estadístiques base com l’atac,
+-- defensa...
+
+
+-- 16. Crea un procediment que permeti eliminar les dades d’un pokemon. Aquest
+-- procediment rebrà com a paràmetre d’entrada el número de pokedex.
+
+
+-- 17. Amplia el procediment anterior de forma que es faci abans de la eliminació una
+-- comprovació de si el pokemon existeix o no. Si no existeix hauria de mostrar un
+-- missatge per pantalla informat que no existeix cap pokemon amb el codi introduït, 
+-- mentre que si existeix, hauria de mostrar les dades del pokemon
+-- eliminat. Es pot realitzar aquest exercici mitjançant una crida al procediment fet
+-- a l’exercici 13.
