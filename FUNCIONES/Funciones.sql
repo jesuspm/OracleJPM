@@ -85,17 +85,104 @@ SQL>
 -------------------------
     --REQUERIMENT 4.
 -------------------------
-CREATE OR REPLACE FUNCTION esPesValid1(cadena varchar2)
-RETURN INTEGER
+CREATE OR REPLACE FUNCTION esAlcadaValida (entrada IN VARCHAR2)
+RETURN NUMBER
 IS
-    resultado INTEGER;
-    pies varchar2:=1;
-    pulgadas varchar2:=1;
+    pies NUMBER;
+    pulgadas NUMBER;
+    pos_separador NUMBER;
 BEGIN
-    while(pies>=)
+    -- Encontrar la posición del separador "-" con la funcion INSTR
+    pos_separador := INSTR(entrada, '-');
+
+    -- Si el separador "-" está en la posición 2 o mayor (indicando al menos un dígito antes del "-")
+    -- y la longitud total es al menos 3 (X-YY), entonces intentamos extraer los pies y polzadas
+    IF pos_separador >= 2 AND LENGTH(entrada) >= 3 THEN
+        -- Extraer los pies(SUBSTR) y los convierte en numero(TO_NUMBRER)
+        pies := TO_NUMBER(SUBSTR(entrada, 1, pos_separador - 1));
+        
+        -- esto extrae la parte de "pulgadas" de la cadena de entrada después del separador "-",
+        -- lo convierte en un número y lo asigna a la variable pulgadas.
+        pulgadas := TO_NUMBER(SUBSTR(entrada, pos_separador + 1));
+       
+        -- Comprobar que las polzadas no sean mayores a 11 y que haya pies y polzadas
+        IF pulgadas < 12 AND pies IS NOT NULL AND pulgadas IS NOT NULL THEN
+            RETURN 1; -- Entrada válida
+        END IF;
+    END IF;
     
-    
-    RETURN resultado;
-END;
+    RETURN 0; -- Entrada no válida
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN 0; -- Manejo de excepciones
+END esAlcadaValida;
 /
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
