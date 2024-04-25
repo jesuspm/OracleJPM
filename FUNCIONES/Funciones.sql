@@ -514,20 +514,64 @@ end;
 -- procediment rebrà com a paràmetres d’entrada el número de pokedex i el nou
 -- atac. Cal tenir present que el nou atac no podrà ser mai inferior al que ja tenia ni
 -- tampoc podrà incrementar-se en més d’un 15%.
+CREATE OR REPLACE PROCEDURE PROBLEMA21 (
+            num INTEGER,
+            nouAtac INTEGER
+    )
+IS
+    oldAtac INTEGER;
+    decrementa EXCEPTION;
+    incrementa EXCEPTION;
+BEGIN
+    -- Primer cal saber l'atac que tenia el pokemon
+    SELECT ataque 
+    INTO oldAtac 
+    FROM estadisticas_base
+    WHERE numero_pokedex=num;
+    
+    -- Ara verificarem que l'atac no es decrementa 
+    IF nouAtac < oldAtac THEN
+        RAISE decrementa;
+    END IF;
+    -- Verificarem que el nou atac no s'incrementa en més d'un 15%
+    IF nouAtac > oldAtac*1.15 THEN 
+        RAISE incrementa;
+    END IF;
+    
+    
+    UPDATE estadisticas_base 
+    SET ataque=nouAtac 
+    WHERE numero_pokedex=num;
+    
+    DBMS_OUTPUT.put_line('Atac modificat correctament');
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.put_line('Error: No existeix cap pokemon amb aquest número');
+ 
+    WHEN decrementa THEN
+        DBMS_OUTPUT.put_line('Error: L''atac no es pot decrementar');
+    
+    WHEN incrementa THEN
+        DBMS_OUTPUT.put_line('Error: El nou atac no pot superar un 15% a l''antic');
+END;
+/
 
-CREATE OR REPLACE PROCEDURE mod_ataque(num_ataque number, )
 
 
 
 
+--ESTO LO QUE HARÁ SERÁ MOSTRAR LAS CONTRAINTS(RESTRICCIONES) QUE TIENE LA TABLA, PARA
+--TENER EN CUENTA LAS DEFENSAS QUE TENDREMOS QUE HACER MEDIANTE : IF O EXCEPTIONS PARA
+--CONTROLAR.
+select constraint_name, search_condition from user_constraints where table_name='JUGADOR';
 
 
---BUSCAR PARA QUE SIRVE.
-select constraint_name, search_condition from user_constraint where table_name='POKEMON';
+-- para mirar las tablas creadas en nuestro usuario.
+select table_name from user_tables;
 
-select table_name form user_tables;
-
+-- para mirar los procedimientos creados.
 select object_name from user_objects where object_type='PROCEDURE';
+-- para mirar las funciones creadas.
 select object_name from user_objects where object_type='FUNCTION';
 
 
