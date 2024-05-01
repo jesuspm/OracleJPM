@@ -38,59 +38,73 @@ Requeriment 1 (1.5 punts):
 -- li ha assignat el codi <<codi>>”
 
 
+
+
+***************************************************
+
+        -- PROCEDIMIENTO 1 HECHO CON IFS --
+
+        CHECKS:
+        -- PESO AUTOINCREMENTABLE
+        -- PESO >=130 AND <=400
+        -- POSICION(C,F,C-F,C-G,F-C,F-G,G-C,G-F,C-F-G,C-G-F)
+        select constraint_name, search_condition from user_constraints where table_name='JUGADOR';
+
+****************************************************
+
+
 CREATE OR REPLACE PROCEDURE NouJugador(
-    p_nom jugador.NOMBRE%type,
+    p_nombre jugador.NOMBRE%type,
     p_procedencia jugador.PROCEDENCIA%type,
-    p_alçada jugador.ALTURA%TYPE,
-    p_pes jugador.PESO%type,
-    p_posicio jugador.NOMBRE_EQUIPO%type
+    p_altura jugador.ALTURA%TYPE,
+    p_peso jugador.PESO%type,
+    p_posicion jugador.posicion%type,
+    p_nombreEquipo jugador.nombre_equipo%type
 )
-
 IS
-
+    v_numeroAUTO integer;
 BEGIN
-    insert INTO JUGADOR VALUES(CODIGO,)
+    -- CHECK1 - AutoIncrementar ID en el insert
+    select max(CODIGO) into v_numeroAUTO from JUGADOR;
+    v_numeroAUTO:= v_numeroAUTO+1;
+    
+    -- CHECK 2 - PESO
+    IF p_peso>=130 AND p_peso<=400 THEN
+    
+    -- CHECk 3 - LETRA POSICION.
+        IF p_posicion IN('C','F','G','C-F','C-G','F-C','F-G','G-C','G-F','C-F-G','C-G-F') THEN
+            -- CHECKS OK HACE INSERT + PRINT.
+            insert into jugador
+            values(v_numeroAUTO, p_nombre, p_procedencia, p_altura, p_peso, p_posicion, p_nombreEquipo);
+            dbms_output.put_line('El jugador ' || p_nombre || ' ingresado correctamente con el codigo: '|| v_numeroAUTO);    
+        ELSE
+            dbms_output.put_line('La posición introducida no es correcta, debe ser una de las siguientes: C,F,C-F,C-G,F-C,F-G,G-C,G-F,C-F-G,C-G-F');
+        END IF;
+    ELSE
+        dbms_output.put_line('El peso introducido es incorrecto, peso correcto (130-400).');    
+    END IF;
 END;
 /
 
+-- EJECUCIÓN:
+execute NouJugador('LOLO','España',7-7,100,'G','Warriors'); 
 
 
+***************************************************
 
+        -- PROCEDIMIENTO 2 HECHO CON IFS --
 
+        CHECKS:
+        
+        select constraint_name, search_condition from user_constraints where table_name='JUGADOR';
 
+****************************************************
 
---                                   REVISAR
-SQL> DESC JUGADOR;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- CODIGO                                    NOT NULL NUMBER(38)
- NOMBRE                                             VARCHAR2(30)
- PROCEDENCIA                                        VARCHAR2(20)
- ALTURA                                             VARCHAR2(4)
- PESO                                               NUMBER(38)
- POSICION                                           VARCHAR2(5)
- NOMBRE_EQUIPO                                      VARCHAR2(20)
-
-SQL> insert into jugador (codigo, peso) values (10000,678);
-insert into jugador (codigo, peso) values (10000,678)
-*
-ERROR at line 1:
-ORA-02290: check constraint (SYSTEM.CH_PESO) violated
-
--- Hemos intentado hacer un insert con el peso 678 pero si hacemos un 
-select constraint_name, search_condition from user_constraints where table_name='JUGADOR';
-
--- Nos aparece lo siguiente
-
-CONSTRAINT_NAME
-------------------------------
-SEARCH_CONDITION
---------------------------------------------------------------------------------
-CH_PESO
-peso>=130 AND peso<=400
-
-Al hacer el insert nos aparece:
-ERROR at line 1:
-ORA-02290: check constraint (SYSTEM.CH_PESO) violated
-
-Tendriamos que lanzar una excepcion con el siguiente codigo: 2290 
+Requeriment 2 (1.5 punts):
+-- Nom: NouJugadorEuropeu
+-- Entrada: nom, procedència, alçada, pes, posicio, equip
+-- Sortida: -
+-- Descripció: Aquesta funcionalitat és igual que l’anterior i ha de fer el mateix, però amb
+-- la diferència que ara, els paràmetres d’entrada vindran donats en kilograms per al pes i
+-- en centímetres per a l’alçada. Recordeu que el format que es vol per a la base de dades
+-- és en lliures per al pes i en peus i polzades per a l’alçada
