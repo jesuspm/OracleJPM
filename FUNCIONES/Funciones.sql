@@ -476,7 +476,7 @@ end;
 
 -- Ejercicico extra: Crea tu primera EXCEPTION custom:
 
-reate or replace procedure borrar(
+create or replace procedure borrar(
 						codi empleats.codi_empl%type
 					) IS
 	aux integer;
