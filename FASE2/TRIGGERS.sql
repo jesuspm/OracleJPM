@@ -264,9 +264,6 @@ Ejercicio EXTRA:
     
     Query para ver los campos -> desc estadisticas_base;
     Query para ver los ataques -> select * from estadisticas_base;
-    Query para hacer update de ataque -> 
-    update estadisticas_base set ataque=150 where numero_pokedex=151;
-
 
 -- Lo que hace este trigger es que si el ataque que es modificado es menor que el 
 -- original saltará un error.
@@ -277,12 +274,20 @@ MIRAR SI SE PUEDE AÑADIR UN MENSAJE CUANDO PETA.
 CREATE OR REPLACE TRIGGER tr_attack_pokemon
     before update on estadisticas_base for each row
 DECLARE
-    my_error exception;
+   
 BEGIN
     if :new.ataque < :old.ataque THEN
-        raise my_error;
+     RAISE_APPLICATION_ERROR(-20001, 'El nuevo valor de ataque no puede ser menor que el valor anterior.');
     end if;
-EXCEPTIONS
+--EXCEPTION
+--WHEN my_error THEN
+    -- Lo que conseguimos con RAISE_APPLICATION_ERROR es sacar un mensaje para nuestra APP en este
+    -- caso nuestro trigger, que lo que hará es basicamente poder lanzar un mensaje custom para el error,
+    -- Y el -20001 es el numero de errores que podriamos poner, el rango va del -20000 hasta el -20999
+    -- para asignaro todo tipo de errores custom.
 
 END;
 /
+
+Query para hacer update de ataque:
+-> update estadisticas_base set ataque=150 where numero_pokedex=151;

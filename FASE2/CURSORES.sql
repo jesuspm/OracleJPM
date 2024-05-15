@@ -32,3 +32,17 @@ END;
 -- EJEMPLO 
 SQL> execute listaPokemonPeso(400); 
 Snorlax↓460
+
+
+-- EJERCICIO CON JOIN
+CREATE OR REPLACE PROCEDURE problema23 IS
+    CURSOR c_problema23 IS 
+        SELECT tipo.nombre, COUNT(*) AS total 
+        FROM tipo join pokemon_tipo ON (pokemon_tipo.id_tipo = tipo.id_tipo) 
+        GROUP BY nombre;
+BEGIN
+    FOR aux IN c_problema23 LOOP
+        DBMS_OUTPUT.put_line(aux.nombre || CHR(9) || aux.total); 
+    END LOOP;
+END;
+/
