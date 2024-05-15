@@ -1,12 +1,5 @@
 
 
-
-
-
-
-
-
-
 Crea un procediment anomenat ConsEstudiants que rebrà com a paràmetre el nom d’una casa i
 caldrà que mostri per pantalla les dades dels alumnes que pertanyen a la casa. El format de
 sortida hauria de ser similar a :
@@ -22,37 +15,6 @@ ALUMNES ASSIGNATS:
 NOM       ANYO
 XXXXXXXXX XX
 XXXXXXXXX XX
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CREATE OR REPLACE PROCEDURE ConsEstudiants (p_nombreCasa casa.nom%type)
